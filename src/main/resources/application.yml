@@ -1,0 +1,16 @@
+spring:
+  thymeleaf:
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    suffix: .html
+    cache: false
+  mvc:
+    favicon:
+      enabled: false
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
