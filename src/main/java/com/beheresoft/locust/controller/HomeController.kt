@@ -1,15 +1,15 @@
-package com.beheresoft.com.controller
+package com.beheresoft.locust.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-@RequestMapping("/test")
-class TestController {
+@RequestMapping("/")
+class HomeController {
 
-    @RequestMapping("/test")
-    fun test(): ModelAndView {
-        return ModelAndView("test")
+    @RequestMapping("/")
+    fun home(): ModelAndView {
+        return ModelAndView("index")
     }
 }

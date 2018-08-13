@@ -1,4 +1,4 @@
-package com.beheresoft.com.util
+package com.beheresoft.locust.util
 
 class Machine private constructor() {
 

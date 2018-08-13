@@ -1,4 +1,4 @@
-package com.beheresoft.com
+package com.beheresoft.locust
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

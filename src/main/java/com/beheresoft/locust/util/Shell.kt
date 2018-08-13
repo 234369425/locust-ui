@@ -1,4 +1,4 @@
-package com.beheresoft.com.util
+package com.beheresoft.locust.util
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
