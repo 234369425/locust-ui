@@ -6,6 +6,8 @@ spring:
     mode: HTML
     suffix: .html
     cache: false
+  freemarker:
+    template-loader-path: classpath:/templates/freemarker
   mvc:
     favicon:
       enabled: false
