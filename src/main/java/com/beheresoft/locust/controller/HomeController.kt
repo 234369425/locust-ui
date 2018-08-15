@@ -10,6 +10,7 @@ class HomeController {
 
     @RequestMapping("/")
     fun home(): ModelAndView {
-        return ModelAndView("index")
+        var mv = ModelAndView("index")
+        return mv
     }
 }
