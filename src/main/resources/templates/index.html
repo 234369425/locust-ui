@@ -1,11 +1,354 @@
 <!doctype html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html lang="ch" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html">
+<head th:replace="component/common :: header">
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <link type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-    <img src="https://locust.io/static/img/logo.png"/>
+<div class="nav bg-dark">
+    <a href="https://locust.io/" target="_blank">
+        <img src="https://locust.io/static/img/logo.png"/>
+    </a>
+</div>
+<div class="container-fluid" id="main">
+    <form novalidate>
+        <div class="row alert alert-warning">
+            <div class="col-md-4 offset-1 input-group-prepend">
+                <span class="input-group-text bg-danger text-light"> Domain:</span>
+                <input class="form-control" ref="domain" id="domain" v-model.trim="testcase.domain"
+                       data-toggle="tooltip" data-placement="bottom" title="Domain is required!"
+                       placeholder="http://www.google.com"
+                       required>
+            </div>
+            <div class="col-md-2 input-group-prepend">
+                <span class="input-group-text"> MinWait:</span>
+                <input class="form-control" type="number" v-model.trim="testcase.minWait" placeholder="1000"
+                       required>
+            </div>
+            <div class="col-md-2 input-group-prepend">
+                <span class="input-group-text"> MaxWait:</span>
+                <input class="form-control" type="number" v-model.trim="testcase.maxWait" placeholder="5000"
+                       required>
+            </div>
+            <div class="col">
+                <button @click="createTest" class="btn btn-success" type="button">Create Performance Test</button>
+            </div>
+        </div>
+        <hr/>
+        <ul class="nav nav-tabs" id="tab" role="tablist">
+            <template v-for="(r,index) in testcase.requests">
+                <li class="nav-item" style="width:120px">
+                    <a v-if="r.active" class="nav-link active"
+                       data-toggle="tab" :aria-controls="'tab-content-' + index"
+                       :href="'#tab-content-' + index">Test
+                        <span @click="removeRequest(index)" class="float-right" aria-hidden="true">&times;</span></a>
+                    <a v-else class="nav-link"
+                       data-toggle="tab" :aria-controls="'tab-content-' + index"
+                       :href="'#tab-content-' + index">Test
+                        <span @click="removeRequest(index)" class="float-right" aria-hidden="true">&times;</span></a>
+                </li>
+            </template>
+            <li class="nav-item">
+                <a class="nav-link" @click="createRequest">+</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="tabContent">
+            <template v-for="(r,index) in testcase.requests">
+                <Request v-bind:request="testcase.requests[index]" v-bind:id="index"></Request>
+            </template>
+        </div>
+</div>
+</form>
+</div>
+<footer th:replace="component/common :: footer">
+    <script src="/static/js/vue.debug.js"></script>
+</footer>
+<script type="text/x-template" id="request">
+    <div :class="'row tab-pane fade request' + (!!request.active?' show active':'') " :id="divId" role="tabpanel"
+         :aria-labelledby="divId">
+        <div class="row">
+            <div class="col-md-4 offset-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{request.method}}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" @click="changeMethod('POST')">POST</a>
+                            <a class="dropdown-item" @click="changeMethod('GET')">GET</a>
+                        </div>
+                    </div>
+                    <input class="form-control" v-model.trim="request.uri" placeholder="Enter request URI" required>
+
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-success" @click="createParamsTable">Params</button>
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" @click="removeAll">Remove All</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text bg-primary text-light" :for="'sl-'+ divId">Weight:</label>
+                </div>
+                <select class="custom-select" v-model="request.weight" :id="'sl-'+ divId">
+                    <option selected> 0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+
+                </select>
+            </div>
+            <div class="col-md-2 input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text bg-primary text-light" :for="'sl-'+ divId">On Start:</label>
+                </div>
+                <select class="custom-select" v-model="request.onStart" :id="'sli-'+ divId">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-10 offset-1">
+            <div class="row">
+                <template v-for="(t,index) in params">
+                    <Params v-bind:args="params[index]" v-bind:params="params"
+                            v-bind:index="index"></Params>
+                </template>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="params-template">
+    <div class="col-md-6">
+        <table class="table table-sm p-table">
+            <thead class="thead-dark text-center">
+            <tr>
+                <th width="30%">Key</th>
+                <th width="60%">Value</th>
+                <th>
+                    <button type="button" @click="removeSelf" class="btn trans" title="Remove params group">
+                        <span aria-hidden="true" style="color:yellow">&times;</span>
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <template v-for="(a,index) in args">
+                <tr>
+                    <td>
+                        <input v-model="a.key" class="full-size">
+                    </td>
+                    <td>
+                        <input v-model="a.value" class="full-size">
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="trans" aria-label="Close" @click="removeRow(index)">
+                            <span aria-hidden="true" title="Remove this row">&times;</span>
+                        </button>
+                    </td>
+                </tr>
+            </template>
+            </tbody>
+        </table>
+    </div>
+</script>
+<script>
+
+    Vue.component('Params', {
+        template: '#params-template',
+        data: function () {
+            return {
+                method: 'GET'
+            }
+        },
+        props: {
+            index: null,
+            params: null,
+            args: null
+        },
+        watch: {
+            args: {
+                handler: function (val, oldVal) {
+                    var arrayLength = val.length;
+                    var args = this.args;
+                    if (args.length == arrayLength) {
+                        if (args[args.length - 1]['key'] != '') {
+                            this.args.push({
+                                key: '',
+                                value: ''
+                            })
+                        }
+                    }
+                },
+                deep: true
+            }
+        },
+        methods: {
+            removeSelf: function () {
+                this.params.splice(this.index, 1)
+            },
+            removeRow: function (index) {
+                var args = this.args;
+                if (args.length == 1) {
+                    this.params.splice(this.index, 1)
+                } else {
+                    args.splice(index, 1)
+                }
+            }
+        }
+    });
+
+    Vue.component('request', {
+        template: '#request',
+        data: function () {
+            return {
+                params: [],
+                divId: ''
+            }
+        },
+        props: {
+            request: null,
+            id: null
+        },
+        methods: {
+            createParamsTable: function (evb) {
+                this.params.push([{'key': '', 'value': ''}]);
+            },
+            changeMethod: function (text) {
+                this.request.method = text
+            },
+            removeAll: function () {
+                while (this.params.length > 0) {
+                    this.params.pop();
+                }
+            }
+        },
+        mounted() {
+            this.request.params = this.params;
+            this.divId = 'tab-content-' + this.id;
+            this.params.push([{'key': '', 'value': ''}]);
+        }
+    });
+
+    new Vue({
+        el: "#main",
+        data: {
+            testcase: {
+                domain: '',
+                minWait: null,
+                maxWait: null,
+                requests: []
+            },
+            message: ''
+        },
+        methods: {
+            createRequest: function () {
+                var req = this.testcase.requests;
+                this.removeState();
+                req.push({active: true, method: 'GET', weight: "0", onStart: "0"})
+            },
+            removeRequest: function (index) {
+                var requests = this.testcase.requests;
+                if (requests.length > 1) {
+                    this.removeState();
+                    requests.splice(index, 1);
+                    requests[requests.length - 1]['active'] = true;
+                } else {
+                    requests[0]['active'] = true;
+                }
+            },
+            removeState: function () {
+                $(".nav-item a").removeClass("active show");
+                var req = this.testcase.requests;
+                for (var i = 0; i < req.length; i++) {
+                    req[i]['active'] = false;
+                }
+            },
+            createTest: function () {
+                var c = this.testcase;
+                if (!c.domain) {
+                    $(this.$refs.domain).tooltip('show');
+                    this.$refs.domain.focus();
+                    return;
+                }
+                var requests = this.testcase.requests;
+                var pass = false;
+                for (var i = 0; i < requests.length; i++) {
+                    if (requests[i].uri) {
+                        pass = true;
+                        break;
+                    }
+                }
+                if (!pass) {
+                    $('#tab').tooltip({
+                        title: 'Need at least one test URI!',
+                        placement: 'bottom'
+                    });
+                    $("#tab").tooltip('show');
+                    return;
+                }
+                for (var i = requests.length - 1; i >= 0; i--) {
+                    if (!requests[i].uri) {
+                        requests.splice(i, 1);
+                    }
+                }
+
+                var onStart = [];
+                var realRequests = [];
+                for (var i = 0; i < requests.length; i++) {
+                    var r = requests[i];
+                    var params = [];
+                    var ps = r.params;
+                    if (ps) {
+                        for (var j = 0; j < ps.length; j++) {
+                            var p = ps[j];
+                            var param = {};
+                            for (var k = 0; k < p.length; k++) {
+                                if (p[k].key) {
+                                    param[p[k].key] = p[k].value;
+                                }
+                            }
+                            if (Object.keys(param).length > 0) {
+                                params.push(param)
+                            }
+                        }
+                    }
+                    var result = {uri: r.uri, method: r.method};
+                    if (params.length > 0) {
+                        result.params = params;
+                    }
+                    if (r.onStart === "1") {
+                        onStart.push(result)
+                    } else {
+                        realRequests.push(result);
+                    }
+                }
+
+                var param = {};
+                param.domain = c.domain;
+                param.minWait = c.minWait;
+                param.maxWait = c.maxWait;
+                param.requests = realRequests;
+
+                console.log(JSON.stringify(param))
+            }
+        },
+        mounted() {
+            this.testcase.requests.push({active: true, method: 'GET', weight: "0", onStart: "0"})
+        }
+    })
+</script>
 </body>
 </html>

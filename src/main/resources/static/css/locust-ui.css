@@ -3,28 +3,35 @@
     animation-duration: 1s;
 }
 
-.footer span:hover, .footer img:hover{
+.footer span:hover, .footer img:hover {
     animation-name: pulse;
     animation-duration: 0.9s;
     border: 1px dotted white;
 }
 
-.main-content {
-    min-height: 500px;
-    height: auto !important;
+.full-size {
+    width: 100%;
 }
 
-
-.site-nav {
-    padding-top: 0.5rem;
+.p-table {
+    margin-top: 20px;
+    width: 90%;
+    margin-left: 5%;
 }
 
-.navbar-collapse {
-    display: block !important;
-    width: auto;
+.trans {
+    background-color: transparent;
+    border: 0
 }
 
-.under-line {
-    padding-bottom: 15px;
-    border-bottom: 1px dotted black;
+.tab-content{
+    padding: 25px 0
+}
+
+.nav-item a text{
+    margin-left:10px;
+}
+
+.nav-item{
+    width: 80px
 }

@@ -1,0 +1,18 @@
+<!doctype html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="ch" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head th:fragment="header">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" th:href="${#httpServletRequest.getContextPath() + '/css/bootstrap.min.css'} ">
+    <link rel="stylesheet" type="text/css" th:href="${#httpServletRequest.getContextPath() + '/css/locust-ui.css'} " charset="UTF-8">
+</head>
+
+<footer th:fragment="footer">
+    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath() + '/js/vue.debug.js'}"></script>
+    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath() + '/js/jquery-3.3.1.min.js'}"></script>
+    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath() + '/js/popper.min.js'}"></script>
+    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath() + '/js/bootstrap.min.js'}"></script>
+</footer>
