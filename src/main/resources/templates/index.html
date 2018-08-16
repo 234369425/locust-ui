@@ -164,7 +164,7 @@
         </table>
     </div>
 </script>
-<script>
+<script th:inline="javascript">
 
     Vue.component('Params', {
         template: '#params-template',
@@ -340,8 +340,20 @@
                 param.domain = c.domain;
                 param.minWait = c.minWait;
                 param.maxWait = c.maxWait;
+                param.start = onStart;
                 param.requests = realRequests;
-
+                $.ajax({
+                    url: '/' + [[${#httpServletRequest.getContextPath()}]] + 'test/create',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {param: JSON.stringify(param)},
+                    success: function (rs) {
+                        console.log(rs);
+                    },
+                    error: function (rs) {
+                        console.log(rs);
+                    }
+                });
                 console.log(JSON.stringify(param))
             }
         },

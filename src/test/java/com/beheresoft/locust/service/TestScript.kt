@@ -1,7 +1,8 @@
 package com.beheresoft.locust.service
 
 import com.beheresoft.locust.Application
-import com.beheresoft.locust.pojo.BaseInfo
+import com.beheresoft.locust.enums.Method
+import com.beheresoft.locust.pojo.TestCase
 import com.beheresoft.locust.pojo.Requests
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,8 +22,13 @@ class TestScript {
     @Test
     fun testTemplate() {
         val list = ArrayList<Requests>()
-        list.add(Requests(uri = "/cde", params = null))
-        println(scriptService.genScript(BaseInfo(domain = "www.baidu.com", requests = list)))
+        list.add(Requests(uri = "/cde", params = null, name = "test"))
+        val m = HashMap<String, String>()
+        m.put("123", "123")
+        val l = ArrayList<HashMap<String, String>>();
+        l.add(m)
+        list.add(Requests(uri = "/def", params = l, name = "post", weight = 10))
+        println(scriptService.genScript(TestCase(domain = "www.baidu.com", requests = list, start = null)))
     }
 
 }

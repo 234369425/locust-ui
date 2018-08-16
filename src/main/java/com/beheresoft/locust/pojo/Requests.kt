@@ -3,14 +3,15 @@ package com.beheresoft.locust.pojo
 import com.beheresoft.locust.enums.Method
 import com.fasterxml.jackson.databind.ObjectMapper
 
-
 data class Requests(
         val method: Method = Method.GET,
         val uri: String,
-        val name: String,
+        var name: String?,
         val weight: Int = 0,
         val params: List<HashMap<String, String>>?
 ) {
+    constructor() : this(uri = "", name = null, params = null)
+
     fun getParams(): String {
         if (params == null) {
             return "[]"
@@ -26,7 +27,7 @@ data class Requests(
 
     fun getParamsSize(): Int {
         if (params == null) {
-            return 0;
+            return 0
         }
         return params.size
     }

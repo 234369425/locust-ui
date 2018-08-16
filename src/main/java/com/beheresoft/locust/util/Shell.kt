@@ -6,7 +6,6 @@ import java.io.InputStreamReader
 class Shell private constructor() {
 
     companion object {
-
         fun execSilent(cmd: String) {
             var process = Runtime.getRuntime().exec(cmd)
             process.waitFor()
@@ -17,13 +16,15 @@ class Shell private constructor() {
             val process = Runtime.getRuntime().exec(cmd)
             var input = BufferedReader(InputStreamReader(process.inputStream))
             for (line in input.lines()) {
+                print(line)
                 result.append(line)
             }
             input.close()
             return result.toString()
         }
 
+        fun save(fileName: String) {
 
+        }
     }
-
 }

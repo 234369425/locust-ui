@@ -2,7 +2,7 @@ import random
 from locust import HttpLocust, TaskSet, task
 
 class TestTasks(TaskSet):
-<#if start??>
+<#if start?? && (start?size gt 0)>
     def on_start(self):
     <#list start as s>
         <#if s.method == 'GET'>
@@ -19,7 +19,7 @@ class TestTasks(TaskSet):
     <#else >
     @task(${r.weight})
     </#if>
-    def ${r.name}(self):
+    def ${r.name!"method"+r_index}(self):
     <#if r.method == 'GET'>
         self.client.get("${r.uri}")
     <#elseif r.method == 'POST'>
@@ -37,5 +37,5 @@ class TestTasks(TaskSet):
 class DoTest(HttpLocust):
     task_set = TestTasks
     host = "<#if domain?lower_case?index_of("http") == 0>${domain}<#else>http://${domain}</#if>"
-    min_wait = ${minWait?c}
-    max_wait = ${maxWait?c}
+    min_wait = ${minWait!500?c}
+    max_wait = ${maxWait!5000?c}
