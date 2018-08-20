@@ -11,7 +11,22 @@ class Shell private constructor() {
             process.waitFor()
         }
 
-        fun exec(cmd: String): String {
+        fun start(name: String, port: Int) {
+            exec(genCmd(name, port))
+        }
+
+        private fun genCmd(name: String, port: Int): String {
+            var shell = System.getProperty("os.name")
+            var cmd: String
+            if (shell.indexOf("Windows") >= 0) {
+                cmd = "start start.cmd $name $port "
+            } else {
+                cmd = "nohup locust -f $name -P $port"
+            }
+            return cmd
+        }
+
+        private fun exec(cmd: String): String {
             var result = StringBuilder()
             val process = Runtime.getRuntime().exec(cmd)
             var input = BufferedReader(InputStreamReader(process.inputStream))
@@ -22,9 +37,7 @@ class Shell private constructor() {
             input.close()
             return result.toString()
         }
-
-        fun save(fileName: String) {
-
-        }
     }
+
+
 }

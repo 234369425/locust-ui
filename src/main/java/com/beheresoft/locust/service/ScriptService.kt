@@ -12,11 +12,13 @@ import java.nio.file.Paths
 class ScriptService(private val freemarker: FreeMarkerConfigurer) {
 
     fun saveToDisk(baseInfo: TestCase) {
-        var file = Paths.get("script.py").toFile()
+        var fileName = "script.py"
+        var port = 21918
+        var file = Paths.get(fileName).toFile()
         Files.touch(file)
         val result = genScript(baseInfo)
         Files.write(result.toByteArray(), file)
-        print(Shell.exec("locust -f script.py -P 21956"))
+        print(Shell.start(fileName, port))
     }
 
     fun genScript(baseInfo: TestCase): String {
